@@ -78,7 +78,7 @@ A clean and intuitive mobile application built using Flutter to help users track
 
 ## 👩‍💻 Author
 
-Your Name
+Shivani Ajay Tayde
 
 ---
 
