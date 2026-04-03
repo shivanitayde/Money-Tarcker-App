@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 import 'add_transaction_screen.dart';
 import 'insights_screen.dart';
+import '../widgets/expense_pie_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,111 +19,117 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<TransactionProvider>(context);
 
-    // 👇 Two screens
     final List<Widget> screens = [
       // 🏠 Dashboard Screen
-      Column(
-        children: [
-          // Balance Card
-          Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(20),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.green, Colors.teal],
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            // Balance Card
+            Container(
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Colors.green, Colors.teal],
+                ),
+                borderRadius: BorderRadius.circular(16),
               ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Total Balance",
-                  style: TextStyle(color: Colors.white),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "₹${provider.balance.toStringAsFixed(2)}",
-                  style: const TextStyle(fontSize: 28, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Monthly Goal",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-
-                const SizedBox(height: 10),
-
-                Text(
-                  "₹${provider.savings.toStringAsFixed(0)} / ₹${provider.monthlyGoal.toStringAsFixed(0)}",
-                ),
-
-                const SizedBox(height: 10),
-
-                LinearProgressIndicator(
-                  value: provider.progress.clamp(0, 1),
-                  minHeight: 8,
-                ),
-
-                const SizedBox(height: 10),
-
-                ElevatedButton(
-                  onPressed: () {
-                    _showGoalDialog(context);
-                  },
-                  child: const Text("Set Goal"),
-                ),
-              ],
-            ),
-          ),
-
-          // Income & Expense
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Income"),
+                  const Text(
+                    "Total Balance",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
                   Text(
-                    "₹${provider.totalIncome.toStringAsFixed(2)}",
-                    style: const TextStyle(color: Colors.green),
+                    "₹${provider.balance.toStringAsFixed(2)}",
+                    style: const TextStyle(fontSize: 28, color: Colors.white),
                   ),
                 ],
               ),
-              Column(
+            ),
+
+            // Goal Card
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Expense"),
+                  const Text(
+                    "Monthly Goal",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
                   Text(
-                    "₹${provider.totalExpense.toStringAsFixed(2)}",
-                    style: const TextStyle(color: Colors.red),
+                    "₹${provider.savings.toStringAsFixed(0)} / ₹${provider.monthlyGoal.toStringAsFixed(0)}",
+                  ),
+                  const SizedBox(height: 10),
+                  LinearProgressIndicator(
+                    value: provider.progress.clamp(0, 1),
+                    minHeight: 8,
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showGoalDialog(context);
+                    },
+                    child: const Text("Set Goal"),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
 
-          const SizedBox(height: 10),
+            // Income & Expense
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    const Text("Income"),
+                    Text(
+                      "₹${provider.totalIncome.toStringAsFixed(2)}",
+                      style: const TextStyle(color: Colors.green),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    const Text("Expense"),
+                    Text(
+                      "₹${provider.totalExpense.toStringAsFixed(2)}",
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
+              ],
+            ),
 
-          // Transaction List
-          Expanded(
-            child: provider.transactions.isEmpty
+            const SizedBox(height: 10),
+
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                "Spending Breakdown",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            SizedBox(height: 200, child: ExpensePieChart()),
+
+            const SizedBox(height: 10),
+
+            // Transaction List
+            provider.transactions.isEmpty
                 ? const Center(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.account_balance_wallet,
                           size: 60,
@@ -134,6 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   )
                 : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: provider.transactions.length,
                     itemBuilder: (context, index) {
                       final tx = provider.transactions[index];
@@ -206,8 +215,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
-          ),
-        ],
+          ],
+        ),
       ),
 
       // 📊 Insights Screen
@@ -218,9 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(_selectedIndex == 0 ? "Dashboard" : "Insights"),
       ),
-
       body: screens[_selectedIndex],
-
       floatingActionButton: _selectedIndex == 0
           ? FloatingActionButton(
               onPressed: () {
@@ -234,7 +241,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Icon(Icons.add),
             )
           : null,
-
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {

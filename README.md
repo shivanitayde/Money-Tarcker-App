@@ -1,16 +1,85 @@
-# money_tracker
+# 💰 Personal Finance Companion App
 
-A new Flutter project.
+A clean and intuitive mobile application built using Flutter to help users track daily transactions, monitor spending habits, and achieve savings goals.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+### 🏠 Dashboard
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* View total balance, income, and expenses
+* Clean and minimal UI for quick understanding
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### ➕ Transaction Management
+
+* Add income and expense transactions
+* Categorized entries (Food, Travel, Salary, etc.)
+* Swipe to delete transactions
+
+### 📊 Data Visualization
+
+* Expense breakdown using pie chart
+* Visual representation of spending patterns
+
+### 📈 Insights Screen
+
+* Total spending overview
+* Highest spending category
+* Category-wise expense breakdown
+
+### 🎯 Monthly Savings Goal
+
+* Set a monthly savings target
+* Track real-time progress
+* Visual progress indicator for motivation
+
+---
+
+## 🛠 Tech Stack
+
+* Flutter
+* Provider (State Management)
+* fl_chart (Charts)
+
+---
+
+## 📱 Screens
+
+* Home Dashboard
+* Add Transaction Screen
+* Insights Screen
+
+---
+
+## 💡 Key Highlights
+
+* Clean architecture and structured code
+* Real-time UI updates using Provider
+* User-friendly and intuitive design
+* Focus on product thinking and usability
+
+---
+
+## 🎥 Demo Video
+
+(Add your demo video link here)
+
+---
+
+## 🔮 Future Improvements
+
+* Local storage (Hive/SQLite)
+* Edit transaction feature
+* Dark mode support
+* Notifications/reminders
+
+---
+
+## 👩‍💻 Author
+
+Your Name
+
+---
+
+Built with ❤️ using Flutter
